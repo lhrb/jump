@@ -1,5 +1,16 @@
 import Phaser from 'phaser'
-import { io } from "socket.io-client"
+
+const ws = new WebSocket("ws://localhost:8080/websocket/");
+
+// Connection opened
+ws.addEventListener("open", (event) => {
+  ws.send("Hello Server!");
+});
+
+// Listen for messages
+ws.addEventListener("message", (event) => {
+  console.log("Message from server ", event.data);
+});
 
 class Example extends Phaser.Scene
 {
@@ -14,7 +25,8 @@ class Example extends Phaser.Scene
     }
 
     create () {
-        this.m = this.add.sprite(200, 400, 'monk', 'idle/idle_1.png');
+        this.m = this.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
+        this.m.setScale(4,4);
         var idleFrames = this.anims.generateFrameNames('monk', {
             start: 1, end: 6, zeroPad:0,
             prefix: 'idle/idle_', suffix: '.png'
@@ -31,7 +43,6 @@ class Example extends Phaser.Scene
     }
 }
 
-
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -44,6 +55,5 @@ const config = {
     },
     scene: Example
 };
-
 
 new Phaser.Game(config)
