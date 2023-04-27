@@ -1,5 +1,7 @@
 -module(ws_handler).
 
+-behaviour(cowboy_websocket).
+
 -export([init/2]).
 -export([websocket_init/1]).
 -export([websocket_handle/2]).
