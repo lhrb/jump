@@ -17,9 +17,9 @@ websocket_init(State) ->
     {ok, _} = broadcast:add_player(self()),
     {[{text, <<"Hello!">>}], State}.
 
-websocket_handle(Frame = {text, _}, State) ->
+websocket_handle(Frame = {text, Text}, State) ->
     io:format("websocket text data from client: ~p~n", [Frame]),
-    broadcast:send_action(self(), {log, Frame}),
+    broadcast:send_action(self(), {log, Text}),
     {[Frame], State};
 websocket_handle(_Frame, State) ->
     io:format("websocket data from client: ~p~n", [_Frame]),
