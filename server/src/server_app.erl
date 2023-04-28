@@ -10,7 +10,7 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
-%    {_Status2, SInterval} = application:get_env(server, stats_interval),
+    {ok, _} = broadcast:start_link(),
     Dispatch = cowboy_router:compile([
             {'_', [{"/", server_handler, []},
                    {"/websocket", ws_handler, []}]}
