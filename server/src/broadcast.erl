@@ -9,7 +9,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3, format_status/2]).
 
--export([add_player/1, remove_player/1, send_action/2, list_player/0]).
+-export([add_player/1, remove_player/1, send_action/2, list_player/0, send/2, loop/0]).
 
 -define(SERVER, ?MODULE).
 
@@ -39,6 +39,10 @@ handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
 
+handle_cast({send_action, Player, Action}, State) ->
+    Other = lists:delete(Player, State#state.player),
+    ok = send(Other, Action),
+    {noreply, State};
 
 handle_cast(_Request, State) ->
     {noreply, State}.
@@ -55,8 +59,24 @@ code_change(_OldVsn, State, _Extra) ->
 format_status(_Opt, Status) ->
     Status.
 
-
+% sync
 add_player(Player) -> gen_server:call(?SERVER, {add, Player}).
 remove_player(Player) -> gen_server:call(?SERVER, {remove, Player}).
-send_action(Player, Action) -> gen_server:call(?SERVER, {send_action, Player, Action}).
 list_player() -> gen_server:call(?SERVER, list).
+
+% async
+send_action(Player, Action) -> gen_server:cast(?SERVER, {send_action, Player, Action}).
+
+send([Pid|T], Message) ->
+    Pid ! Message,
+    send(T, Message);
+
+send([], _) -> ok.
+
+% debug helper
+loop() ->
+    receive
+        Any ->
+            io:format("~p: received message: ~p~n", [self(), Any]),
+            loop()
+    end.
