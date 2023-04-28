@@ -23,11 +23,13 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({add, Player}, _From, State) ->
+    io:format("add new player: ~p~n", [Player]),
     NewPlayerList = lists:append(State#state.player, [Player]),
     NewState = State#state{player=NewPlayerList},
     {reply, {ok, NewState}, NewState};
 
 handle_call({remove, Player}, _From, State) ->
+    io:format("remove player: ~p~n", [Player]),
     NewPlayerList = lists:delete(Player, State#state.player),
     NewState = State#state{player=NewPlayerList},
     {reply, {ok, NewState}, NewState};
@@ -40,6 +42,7 @@ handle_call(_Request, _From, State) ->
     {reply, Reply, State}.
 
 handle_cast({send_action, Player, Action}, State) ->
+    io:format("from ~p send ~p~n", [Player, Action]),
     Other = lists:delete(Player, State#state.player),
     ok = send(Other, Action),
     {noreply, State};
