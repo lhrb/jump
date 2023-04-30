@@ -41,15 +41,93 @@ class Example extends Phaser.Scene
         leftKey = this.input.keyboard.addKey('LEFT');
         rightKey = this.input.keyboard.addKey('RIGHT');
 
-
         player = this.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
         player.setScale(4,4);
-        var idleFrames = this.anims.generateFrameNames('monk', {
+        let idleFrames = this.anims.generateFrameNames('monk', {
             start: 1, end: 6, zeroPad:0,
             prefix: 'idle/idle_', suffix: '.png'
         });
         this.anims.create({ key: 'idle', frames: idleFrames, frameRate: 10, repeat: -1 });
-        player.anims.play('idle');
+
+        let runFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 8, zeroPad:0,
+            prefix: 'run/run_', suffix: '.png'
+        });
+        this.anims.create({ key: 'run', frames: runFrames, frameRate: 10, repeat: -1 });
+
+        let jumpUpFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 3, zeroPad:0,
+            prefix: 'j_up/j_up_', suffix: '.png'
+        });
+        this.anims.create({ key: 'jumpUp', frames: jumpUpFrames, frameRate: 10, repeat: -1 });
+
+        let jumpDownFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 3, zeroPad:0,
+            prefix: 'j_down/j_down_', suffix: '.png'
+        });
+        this.anims.create({ key: 'jumpDown', frames: jumpDownFrames, frameRate: 10, repeat: -1 });
+
+        let airAttackFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 7, zeroPad:0,
+            prefix: 'air_atk/air_atk_', suffix: '.png'
+        });
+        this.anims.create({ key: 'airAttack', frames: airAttackFrames, frameRate: 10, repeat: -1 });
+
+        let attack1Frames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 6, zeroPad:0,
+            prefix: '1_atk/1_atk_', suffix: '.png'
+        });
+        this.anims.create({ key: 'attack1', frames: attack1Frames, frameRate: 10, repeat: -1 });
+
+        let attack2Frames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 12, zeroPad:0,
+            prefix: '2_atk/2_atk_', suffix: '.png'
+        });
+        this.anims.create({ key: 'attack2', frames: attack2Frames, frameRate: 10, repeat: -1 });
+
+        let attack3Frames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 23, zeroPad:0,
+            prefix: '3_atk/3_atk_', suffix: '.png'
+        });
+        this.anims.create({ key: 'attack3', frames: attack3Frames, frameRate: 10, repeat: -1 });
+
+        let specialAttackFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 25, zeroPad:0,
+            prefix: 'sp_atk/sp_atk_', suffix: '.png'
+        });
+        this.anims.create({ key: 'specialAttack', frames: specialAttackFrames, frameRate: 10, repeat: -1 });
+
+        let meditateFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 16, zeroPad:0,
+            prefix: 'meditate/meditate_', suffix: '.png'
+        });
+        this.anims.create({ key: 'meditate', frames: meditateFrames, frameRate: 10, repeat: -1 });
+
+        let rollFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 6, zeroPad:0,
+            prefix: 'roll/roll_', suffix: '.png'
+        });
+        this.anims.create({ key: 'roll', frames: rollFrames, frameRate: 10, repeat: -1 });
+
+        let defendFrames  = this.anims.generateFrameNames('monk', {
+            start: 1, end: 13, zeroPad:0,
+            prefix: 'defend/defend_', suffix: '.png'
+        });
+        this.anims.create({ key: 'defend', frames: defendFrames, frameRate: 10, repeat: -1 });
+
+        let takeHitFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 6, zeroPad:0,
+            prefix: 'take_hit/take_hit_', suffix: '.png'
+        });
+        this.anims.create({ key: 'takeHit', frames: takeHitFrames, frameRate: 10, repeat: -1 });
+
+        let deathFrames = this.anims.generateFrameNames('monk', {
+            start: 1, end: 18, zeroPad:0,
+            prefix: 'death/death_', suffix: '.png'
+        });
+        this.anims.create({ key: 'death', frames: deathFrames, frameRate: 10, repeat: -1 });
+
+        player.anims.play('death');
     }
 
     update(time, delta) {
