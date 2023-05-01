@@ -8,10 +8,10 @@ let player;
 let healthBar;
 let staminaBar;
 
-let buttonA;
-let buttonB;
-let buttonC;
-let buttonD;
+let buttonA = { gameObject: null, isDown: false };
+let buttonB = { gameObject: null, isDown: false };
+let buttonC = { gameObject: null, isDown: false };
+let buttonD = { gameObject: null, isDown: false };
 
 const ws = new WebSocket("ws://localhost:8080/websocket/");
 
@@ -61,22 +61,36 @@ class Example extends Phaser.Scene
         staminaBar.fillStyle(0x2ecc71, 1);
         staminaBar.fillRect(10,35,200,20);
 
-        buttonA = this.add.circle(580, 330, 15, 0x2ecc71).setInteractive();
-        buttonB = this.add.circle(555, 305, 15, 0x2ecc71).setInteractive();
-        buttonC = this.add.circle(580, 280, 15, 0x2ecc71).setInteractive();
-        buttonD = this.add.circle(605, 305, 15, 0x2ecc71).setInteractive();
+        buttonA.gameObject = this.add.circle(580, 330, 15, 0x2ecc71).setInteractive();
+        buttonB.gameObject = this.add.circle(555, 305, 15, 0x2ecc71).setInteractive();
+        buttonC.gameObject = this.add.circle(580, 280, 15, 0x2ecc71).setInteractive();
+        buttonD.gameObject = this.add.circle(605, 305, 15, 0x2ecc71).setInteractive();
 
         let textConfig = {fontSize:'20px', color:'white', fontFamily: 'Arial'};
         let txtA = this.add.text(0, 0, "A", textConfig);
         let txtB = this.add.text(0, 0, "B", textConfig);
         let txtC = this.add.text(0, 0, "C", textConfig);
         let txtD = this.add.text(0, 0, "D", textConfig);
-        Phaser.Display.Align.In.Center( txtA, buttonA );
-        Phaser.Display.Align.In.Center( txtB, buttonB );
-        Phaser.Display.Align.In.Center( txtC, buttonC );
-        Phaser.Display.Align.In.Center( txtD, buttonD );
+        Phaser.Display.Align.In.Center( txtA, buttonA.gameObject );
+        Phaser.Display.Align.In.Center( txtB, buttonB.gameObject );
+        Phaser.Display.Align.In.Center( txtC, buttonC.gameObject );
+        Phaser.Display.Align.In.Center( txtD, buttonD.gameObject );
 
-        buttonA.on('pointerdown', () => { console.log("hallo from button"); });
+        buttonA.gameObject
+               .on('pointerdown', () => { buttonA.isDown = true; })
+               .on('pointerup', () => { buttonA.isDown = false; });
+
+         buttonB.gameObject
+               .on('pointerdown', () => { buttonB.isDown = true; })
+               .on('pointerup', () => { buttonB.isDown = false; });
+
+         buttonC.gameObject
+               .on('pointerdown', () => { buttonC.isDown = true; })
+               .on('pointerup', () => { buttonC.isDown = false; });
+
+         buttonD.gameObject
+               .on('pointerdown', () => { buttonD.isDown = true; })
+               .on('pointerup', () => { buttonD.isDown = false; });
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
         player.setScale(2,2);
@@ -188,8 +202,20 @@ class Example extends Phaser.Scene
             player.setVelocityX(0);
         }
 
-        if (spaceKey.isDown) {
+        if (buttonA.isDown) {
+            playAnim(player, 'roll');
+        }
+
+        if (buttonB.isDown) {
+            playAnim(player, 'attack1');
+        }
+
+        if (buttonC.isDown) {
             playAnim(player, 'airAttack');
+        }
+
+        if (buttonD.isDown) {
+            playAnim(player, 'defend')
         }
 
         //ws.send(JSON.stringify({action: "move", x: player.x}));
