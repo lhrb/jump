@@ -8,6 +8,11 @@ let player;
 let healthBar;
 let staminaBar;
 
+let buttonA;
+let buttonB;
+let buttonC;
+let buttonD;
+
 const ws = new WebSocket("ws://localhost:8080/websocket/");
 
 // Connection opened
@@ -50,15 +55,28 @@ class Example extends Phaser.Scene
 
         healthBar = this.add.graphics();
         healthBar.fillStyle(0xe74c3c, 1);
-        healthBar.fillRect(0,0,200,20);
-        healthBar.x = 10;
-        healthBar.y = 10;
+        healthBar.fillRect(10,10,200,20);
 
         staminaBar = this.add.graphics();
         staminaBar.fillStyle(0x2ecc71, 1);
-        staminaBar.fillRect(0,0,200,20);
-        staminaBar.x = 10;
-        staminaBar.y = 35;
+        staminaBar.fillRect(10,35,200,20);
+
+        buttonA = this.add.circle(580, 330, 15, 0x2ecc71).setInteractive();
+        buttonB = this.add.circle(555, 305, 15, 0x2ecc71).setInteractive();
+        buttonC = this.add.circle(580, 280, 15, 0x2ecc71).setInteractive();
+        buttonD = this.add.circle(605, 305, 15, 0x2ecc71).setInteractive();
+
+        let textConfig = {fontSize:'20px', color:'white', fontFamily: 'Arial'};
+        let txtA = this.add.text(0, 0, "A", textConfig);
+        let txtB = this.add.text(0, 0, "B", textConfig);
+        let txtC = this.add.text(0, 0, "C", textConfig);
+        let txtD = this.add.text(0, 0, "D", textConfig);
+        Phaser.Display.Align.In.Center( txtA, buttonA );
+        Phaser.Display.Align.In.Center( txtB, buttonB );
+        Phaser.Display.Align.In.Center( txtC, buttonC );
+        Phaser.Display.Align.In.Center( txtD, buttonD );
+
+        buttonA.on('pointerdown', () => { console.log("hallo from button"); });
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
         player.setScale(2,2);
@@ -180,8 +198,8 @@ class Example extends Phaser.Scene
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 360,
     physics: {
         default: 'arcade',
         arcade: {
