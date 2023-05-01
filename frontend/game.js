@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 
 let leftKey;
 let rightKey;
+let spaceKey;
 let player;
 
 const ws = new WebSocket("ws://localhost:8080/websocket/");
@@ -42,6 +43,7 @@ class Example extends Phaser.Scene
 
         leftKey = this.input.keyboard.addKey('LEFT');
         rightKey = this.input.keyboard.addKey('RIGHT');
+        spaceKey = this.input.keyboard.addKey('SPACE');
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
         player.setScale(2,2);
@@ -135,25 +137,27 @@ class Example extends Phaser.Scene
 
         player.anims.play('run')
               .once('animationcomplete', () => player.anims.play('idle'));
+
+        player.on('animationupdate', (animation,frame,gameObject,frameKey) => {
+            player.body.setSize(frame.frame.width, frame.frame.height)
+        });
     }
 
     update(time, delta) {
 
         if (leftKey.isDown) {
-            //player.scaleX = -2;
-            player.setVelocityX(105);
+            player.setVelocityX(-160);
             playAnim(player, 'run');
         } else if (rightKey.isDown) {
-            //player.scaleX = 2;
-            //player.x += delta/8;
-            player.setVelocityX(-5);
+            player.setVelocityX(160);
             playAnim(player, 'run');
+        } else {
+            player.setVelocityX(0);
         }
 
-        /*this.m.x += delta/8;
-        if (this.m.x > 800) {
-            this.m.x = -50;
-        }*/
+        if (spaceKey.isDown) {
+            playAnim(player, 'specialAttack');
+        }
 
         //ws.send(JSON.stringify({action: "move", x: player.x}));
     }
@@ -166,7 +170,8 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 }
+            gravity: { y: 200 },
+            debug: true
         }
     },
     scene: Example
