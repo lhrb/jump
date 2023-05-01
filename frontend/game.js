@@ -5,6 +5,9 @@ let rightKey;
 let spaceKey;
 let player;
 
+let healthBar;
+let staminaBar;
+
 const ws = new WebSocket("ws://localhost:8080/websocket/");
 
 // Connection opened
@@ -44,6 +47,18 @@ class Example extends Phaser.Scene
         leftKey = this.input.keyboard.addKey('LEFT');
         rightKey = this.input.keyboard.addKey('RIGHT');
         spaceKey = this.input.keyboard.addKey('SPACE');
+
+        healthBar = this.add.graphics();
+        healthBar.fillStyle(0xe74c3c, 1);
+        healthBar.fillRect(0,0,200,20);
+        healthBar.x = 10;
+        healthBar.y = 10;
+
+        staminaBar = this.add.graphics();
+        staminaBar.fillStyle(0x2ecc71, 1);
+        staminaBar.fillRect(0,0,200,20);
+        staminaBar.x = 10;
+        staminaBar.y = 35;
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
         player.setScale(2,2);
@@ -143,7 +158,7 @@ class Example extends Phaser.Scene
         });
     }
 
-    update(time, delta) {
+    update() {
 
         if (leftKey.isDown) {
             player.setVelocityX(-160);
@@ -156,7 +171,7 @@ class Example extends Phaser.Scene
         }
 
         if (spaceKey.isDown) {
-            playAnim(player, 'specialAttack');
+            playAnim(player, 'airAttack');
         }
 
         //ws.send(JSON.stringify({action: "move", x: player.x}));
