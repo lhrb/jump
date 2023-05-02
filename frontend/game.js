@@ -217,21 +217,28 @@ class Example extends Phaser.Scene
         if (buttonD.isDown) {
             playAnim(player, 'defend')
         }
-
+        //JSON.stringify({action: "move", x: player.x});
         //ws.send(JSON.stringify({action: "move", x: player.x}));
     }
 }
 
 const config = {
     type: Phaser.AUTO,
-    width: 640,
-    height: 360,
     physics: {
         default: 'arcade',
         arcade: {
             gravity: { y: 200 },
             debug: true
         }
+    },
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 840,
+        height: 360,
+    },
+    input :{
+        activePointers:3,
     },
     scene: Example
 };
