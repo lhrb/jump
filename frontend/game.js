@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 let leftKey;
 let rightKey;
 let spaceKey;
+let cursorsKeys;
 let player;
 
 let healthBar;
@@ -45,6 +46,10 @@ class Example extends Phaser.Scene
 
     preload () {
         this.load.multiatlas('monk', 'assets/monk.json', 'assets');
+
+        // https://codepen.io/rexrainbow/pen/oyqvQY
+        let url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+        this.load.plugin('rexvirtualjoystickplugin', url, true);
     }
 
     create () {
@@ -61,10 +66,10 @@ class Example extends Phaser.Scene
         staminaBar.fillStyle(0x2ecc71, 1);
         staminaBar.fillRect(10,35,200,20);
 
-        buttonA.gameObject = this.add.circle(580, 330, 15, 0x2ecc71).setInteractive();
-        buttonB.gameObject = this.add.circle(555, 305, 15, 0x2ecc71).setInteractive();
-        buttonC.gameObject = this.add.circle(580, 280, 15, 0x2ecc71).setInteractive();
-        buttonD.gameObject = this.add.circle(605, 305, 15, 0x2ecc71).setInteractive();
+        buttonA.gameObject = this.add.circle(780, 330, 15, 0x2ecc71).setInteractive();
+        buttonB.gameObject = this.add.circle(755, 305, 15, 0x2ecc71).setInteractive();
+        buttonC.gameObject = this.add.circle(780, 280, 15, 0x2ecc71).setInteractive();
+        buttonD.gameObject = this.add.circle(805, 305, 15, 0x2ecc71).setInteractive();
 
         let textConfig = {fontSize:'20px', color:'white', fontFamily: 'Arial'};
         let txtA = this.add.text(0, 0, "A", textConfig);
@@ -188,14 +193,25 @@ class Example extends Phaser.Scene
         player.on('animationupdate', (animation,frame,gameObject,frameKey) => {
             player.body.setSize(frame.frame.width, frame.frame.height)
         });
+
+
+        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+                x: 60,
+                y: 300,
+                radius: 50,
+                base: this.add.circle(0, 0, 50, 0x888888),
+                thumb: this.add.circle(0, 0, 25, 0xcccccc),
+            });
+
+        cursorsKeys = this.joyStick.createCursorKeys();
     }
 
     update() {
 
-        if (leftKey.isDown) {
+        if (cursorsKeys.left.isDown || leftKey.isDown) {
             player.setVelocityX(-160);
             playAnim(player, 'run');
-        } else if (rightKey.isDown) {
+        } else if (cursorsKeys.right.isDown || rightKey.isDown) {
             player.setVelocityX(160);
             playAnim(player, 'run');
         } else {
