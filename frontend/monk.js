@@ -19,7 +19,8 @@ export class Monk {
         };
 
     constructor(scene) {
-        this.scene = scene;
+      this.scene = scene;
+      this.clazz = 'monk';
     }
 
     create() {
