@@ -1,11 +1,13 @@
 import Phaser from 'phaser'
 import { Monk } from './monk.js'
+import { Player } from './player.js';
 
 let leftKey;
 let rightKey;
 let spaceKey;
 let cursorsKeys;
 let player;
+let p;
 
 let healthBar;
 let staminaBar;
@@ -123,37 +125,19 @@ class Example extends Phaser.Scene
             });
 
         cursorsKeys = this.joyStick.createCursorKeys();
+        p = new Player(player,
+                       monk,
+                       { cursorsKeys: cursorsKeys,
+                         buttonA: buttonA,
+                         buttonB: buttonB,
+                         buttonC: buttonC,
+                         buttonD: buttonD });
     }
 
-    update() {
+    update(time, delta) {
+        p.update(time, delta);
 
-        if (cursorsKeys.left.isDown || leftKey.isDown) {
-            player.setVelocityX(-160);
-            playAnim(player, 'run');
-            player.setFlipX(true);
-        } else if (cursorsKeys.right.isDown || rightKey.isDown) {
-            player.setVelocityX(160);
-            playAnim(player, 'run');
-            player.setFlipX(false);
-        } else {
-            player.setVelocityX(0);
-        }
 
-        if (buttonA.isDown) {
-            playAnim(player, 'roll');
-        }
-
-        if (buttonB.isDown) {
-            playAnim(player, 'attack1');
-        }
-
-        if (buttonC.isDown) {
-            playAnim(player, 'airAttack');
-        }
-
-        if (buttonD.isDown) {
-            playAnim(player, 'defend')
-        }
         //JSON.stringify({action: "move", x: player.x});
         //ws.send(JSON.stringify({action: "move", x: player.x}));
     }
