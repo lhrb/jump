@@ -130,9 +130,11 @@ class Example extends Phaser.Scene
         if (cursorsKeys.left.isDown || leftKey.isDown) {
             player.setVelocityX(-160);
             playAnim(player, 'run');
+            player.setFlipX(true);
         } else if (cursorsKeys.right.isDown || rightKey.isDown) {
             player.setVelocityX(160);
             playAnim(player, 'run');
+            player.setFlipX(false);
         } else {
             player.setVelocityX(0);
         }
