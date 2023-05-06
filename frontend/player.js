@@ -16,18 +16,36 @@ export class Player {
       case 'idle':
         if (this.ctrl.cursorsKeys.left.isDown) {
           this.state = 'run-left';
+        } else if (this.ctrl.cursorsKeys.right.isDown) {
+          this.state = 'run-right';
+        } else if (this.ctrl.buttonC.isDown) {
+          this.state = 'jump';
         }
-
+        var idleAnim = this.clazz.anim('idle');
+        this.gameObj.anims.play(idleAnim, true);
+        this.gameObj.setVelocityX(0);
         break;
       case 'run-left':
-        let runAnim = this.clazz.anim('run');
+        if (!this.ctrl.cursorsKeys.left.isDown) {
+          this.state = 'idle';
+        }
+        var runAnim = this.clazz.anim('run');
         this.gameObj.setFlipX(true);
         this.gameObj.setVelocityX(-160);
         this.gameObj.anims.play(runAnim, true);
         break;
       case 'run-right':
+        if (!this.ctrl.cursorsKeys.right.isDown) {
+          this.state = 'idle';
+        }
+        var runAnim = this.clazz.anim('run');
+        this.gameObj.setFlipX(false);
+        this.gameObj.setVelocityX(160);
+        this.gameObj.anims.play(runAnim, true);
         break;
       case 'jump':
+        this.gameObj.setVelocityY(-200);
+        this.state = 'idle';
         break;
       case 'double-jump':
         break;
