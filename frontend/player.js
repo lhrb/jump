@@ -45,7 +45,22 @@ export class Player {
         break;
       case 'jump':
         this.gameObj.setVelocityY(-200);
-        this.state = 'idle';
+        this.state = 'jump-up-in-air';
+        break;
+      case 'jump-up-in-air':
+        if (this.gameObj.body.velocity.y >= 0) {
+          this.state = 'jump-down-in-air';
+        }
+        var jumpAnim = this.clazz.anim('jumpUp');
+        this.gameObj.anims.play(jumpAnim, true);
+        break;
+
+      case 'jump-down-in-air':
+        if (this.gameObj.body.onFloor()) {
+          this.state = 'idle';
+        }
+        var jumpAnim = this.clazz.anim('jumpDown');
+        this.gameObj.anims.play(jumpAnim, true);
         break;
       case 'double-jump':
         break;
