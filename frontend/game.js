@@ -9,9 +9,6 @@ let cursorsKeys;
 let player;
 let p;
 
-let healthBar;
-let staminaBar;
-
 const ws = new WebSocket("ws://localhost:8080/websocket/");
 
 let monk;
@@ -76,20 +73,12 @@ class Example extends Phaser.Scene
     }
 
     create () {
-
         let buttons = this.createButtons(750, 290);
+        let bars = this.createBars();
 
         leftKey = this.input.keyboard.addKey('LEFT');
         rightKey = this.input.keyboard.addKey('RIGHT');
         spaceKey = this.input.keyboard.addKey('SPACE');
-
-        healthBar = this.add.graphics();
-        healthBar.fillStyle(0xe74c3c, 1);
-        healthBar.fillRect(10,10,200,10);
-
-        staminaBar = this.add.graphics();
-        staminaBar.fillStyle(0x2ecc71, 1);
-        staminaBar.fillRect(10,25,200,10);
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
 
@@ -122,8 +111,8 @@ class Example extends Phaser.Scene
                          buttonC: buttons[2],
                          buttonD: buttons[3],
                          buttonE: buttons[4],
-                         buttonF: buttons[5],
-                       });
+                         buttonF: buttons[5] },
+                      bars);
     }
 
     update(time, delta) {
@@ -163,6 +152,43 @@ class Example extends Phaser.Scene
         }
 
         return buttons;
+    }
+
+    createBars() {
+        const healthBarBg = this.add.graphics();
+        healthBarBg.fillStyle(0x70271f, 1);
+        healthBarBg.fillRect(10,10,200,10);
+
+        const staminaBarBg = this.add.graphics();
+        staminaBarBg.fillStyle(0x175631, 1);
+        staminaBarBg.fillRect(10,21,200,10);
+
+        const powerBarBg = this.add.graphics();
+        powerBarBg.fillStyle(0x106066, 1);
+        powerBarBg.fillRect(10,32,200,10);
+
+        const healthBar = this.add.graphics();
+        healthBar.fillStyle(0xe74c3c, 1);
+        healthBar.fillRect(12,12,196,6);
+
+        const staminaBar = this.add.graphics();
+        staminaBar.fillStyle(0x2ecc71, 1);
+        staminaBar.fillRect(12,23,196,6);
+
+        const powerBar = this.add.graphics();
+        powerBar.fillStyle(0x15deed, 1);
+        powerBar.fillRect(12,34,0,6);
+
+        const setPower = (percent) => {
+            let width = Math.round(196 * percent);
+            powerBar.clear();
+            powerBar.fillStyle(0x15deed, 1);
+            powerBar.fillRect(12,34,width,6);
+        }
+
+        return { healthBar: healthBar,
+                 staminaBar: staminaBar,
+                 powerBar: setPower };
     }
 }
 
