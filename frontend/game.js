@@ -12,11 +12,6 @@ let p;
 let healthBar;
 let staminaBar;
 
-let buttonA = { gameObject: null, isDown: false };
-let buttonB = { gameObject: null, isDown: false };
-let buttonC = { gameObject: null, isDown: false };
-let buttonD = { gameObject: null, isDown: false };
-
 const ws = new WebSocket("ws://localhost:8080/websocket/");
 
 let monk;
@@ -39,7 +34,7 @@ ws.addEventListener("message", (event) => {
 
 function polygonPoints(x0, y0, r1, r2, offset) {
     const off = 72 * offset;
-    // 72 degree split into 8
+    // 72 degree split into 9
     const deg = [...Array(9).keys()]
         .map(i => i * 9 + off)
         .map(d => Phaser.Math.DegToRad(d));
@@ -65,12 +60,6 @@ function polygonPoints(x0, y0, r1, r2, offset) {
     return inner.concat(outer);
 }
 
-function polygonCenter(points) {
-    const x = points.map(p => p.x).reduce((acc, e) => acc + e, 0) / points.length;
-    const y = points.map(p => p.y).reduce((acc, e) => acc + e, 0) / points.length;
-    return new Phaser.Geom.Point(x, y);
-}
-
 class Example extends Phaser.Scene
 {
 
@@ -87,26 +76,8 @@ class Example extends Phaser.Scene
     }
 
     create () {
-        // Create the middle button
-        const middleButton = this.add.circle(400, 300, 25, 0xff0000);
-        middleButton.setInteractive();
-        middleButton.on('pointerdown', () => {
-            console.log('Middle button clicked');
-        });
 
-        for (let i = 0; i < 5; i++) {
-            const points = polygonPoints(400, 300, 25, 40, i);
-            const polygonButton = this.add.polygon(0, 0, points, 0x2ecc71);
-            polygonButton.setInteractive(new Phaser.Geom.Polygon(points), Phaser.Geom.Polygon.Contains);
-            //polygonButton.setPosition(400,300);
-
-            polygonButton.on('pointerdown', () => {
-                console.log('Polygon button clicked!' + i);
-            });
-            console.log(polygonButton);
-        }
-
-
+        let buttons = this.createButtons(750, 290);
 
         leftKey = this.input.keyboard.addKey('LEFT');
         rightKey = this.input.keyboard.addKey('RIGHT');
@@ -119,37 +90,6 @@ class Example extends Phaser.Scene
         staminaBar = this.add.graphics();
         staminaBar.fillStyle(0x2ecc71, 1);
         staminaBar.fillRect(10,25,200,10);
-
-        buttonA.gameObject = this.add.circle(780, 330, 25, 0x2ecc71).setInteractive();
-        buttonB.gameObject = this.add.circle(755, 305, 15, 0x2ecc71).setInteractive();
-        buttonC.gameObject = this.add.circle(780, 280, 15, 0x2ecc71).setInteractive();
-        buttonD.gameObject = this.add.circle(805, 305, 15, 0x2ecc71).setInteractive();
-
-        let textConfig = {fontSize:'20px', color:'white', fontFamily: 'Arial'};
-        let txtA = this.add.text(0, 0, "A", textConfig);
-        let txtB = this.add.text(0, 0, "B", textConfig);
-        let txtC = this.add.text(0, 0, "C", textConfig);
-        let txtD = this.add.text(0, 0, "D", textConfig);
-        Phaser.Display.Align.In.Center( txtA, buttonA.gameObject );
-        Phaser.Display.Align.In.Center( txtB, buttonB.gameObject );
-        Phaser.Display.Align.In.Center( txtC, buttonC.gameObject );
-        Phaser.Display.Align.In.Center( txtD, buttonD.gameObject );
-
-        buttonA.gameObject
-               .on('pointerdown', () => { buttonA.isDown = true; })
-               .on('pointerup', () => { buttonA.isDown = false; });
-
-         buttonB.gameObject
-               .on('pointerdown', () => { buttonB.isDown = true; })
-               .on('pointerup', () => { buttonB.isDown = false; });
-
-         buttonC.gameObject
-               .on('pointerdown', () => { buttonC.isDown = true; })
-               .on('pointerup', () => { buttonC.isDown = false; });
-
-         buttonD.gameObject
-               .on('pointerdown', () => { buttonD.isDown = true; })
-               .on('pointerup', () => { buttonD.isDown = false; });
 
         player = this.physics.add.sprite(200, 200, 'monk', 'idle/idle_1.png');
 
@@ -177,10 +117,13 @@ class Example extends Phaser.Scene
         p = new Player(player,
                        monk,
                        { cursorsKeys: cursorsKeys,
-                         buttonA: buttonA,
-                         buttonB: buttonB,
-                         buttonC: buttonC,
-                         buttonD: buttonD });
+                         buttonA: buttons[0],
+                         buttonB: buttons[1],
+                         buttonC: buttons[2],
+                         buttonD: buttons[3],
+                         buttonE: buttons[4],
+                         buttonF: buttons[5],
+                       });
     }
 
     update(time, delta) {
@@ -189,6 +132,34 @@ class Example extends Phaser.Scene
 
         //JSON.stringify({action: "move", x: player.x});
         //ws.send(JSON.stringify({action: "move", x: player.x}));
+    }
+
+    createButtons(x, y) {
+        let buttons = [];
+        // Create the middle button
+        const middleButton = this.add.circle(x, y, 30, 0xff0000);
+        middleButton.setInteractive();
+        const btnA = { gameObject: middleButton, isDown: false };
+        middleButton.on('pointerdown', () => { btnA.isDown = true; })
+                    .on('pointerup', () => { btnA.isDown = false; });
+        buttons.push(btnA);
+
+        for (let i = 0; i < 5; i++) {
+            const points = polygonPoints(x, y, 31, 60, i);
+            const btn = this.add.graphics();
+            btn.fillStyle(0x2ecc71);
+            btn.fillPoints(points, true);
+            btn.lineStyle(1, 0xff0000, 1.0);
+            btn.strokePoints(points, true);
+            btn.setInteractive(new Phaser.Geom.Polygon(points), Phaser.Geom.Polygon.Contains);
+            const btnB = { gameObject: btn, isDown: false };
+            btn.on('pointerdown', () => { btnB.isDown = true; })
+               .on('pointerup', () => { btnB.isDown = false; });
+
+            buttons.push(btnB);
+        }
+
+        return buttons;
     }
 }
 
