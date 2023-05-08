@@ -135,9 +135,12 @@ class Example extends Phaser.Scene
     }
 
     createButtons(x, y) {
+        const colors = [0xf94144, 0x577590, 0xf9c74f,
+                        0xf9844a, 0x4d908e, 0x43aa8b];
+
         let buttons = [];
         // Create the middle button
-        const middleButton = this.add.circle(x, y, 30, 0xff0000);
+        const middleButton = this.add.circle(x, y, 30, colors[0]);
         middleButton.setInteractive();
         const btnA = { gameObject: middleButton, isDown: false };
         middleButton.on('pointerdown', () => { btnA.isDown = true; })
@@ -147,9 +150,9 @@ class Example extends Phaser.Scene
         for (let i = 0; i < 5; i++) {
             const points = polygonPoints(x, y, 31, 60, i);
             const btn = this.add.graphics();
-            btn.fillStyle(0x2ecc71);
+            btn.fillStyle(colors[i + 1]);
             btn.fillPoints(points, true);
-            btn.lineStyle(1, 0xff0000, 1.0);
+            btn.lineStyle(1, 0x000000, 1.0);
             btn.strokePoints(points, true);
             btn.setInteractive(new Phaser.Geom.Polygon(points), Phaser.Geom.Polygon.Contains);
             const btnB = { gameObject: btn, isDown: false };
