@@ -24,10 +24,14 @@ export class Player {
           this.state = 'jump';
         } else if (this.ctrl.buttonA.isDown) {
           this.state = 'charge';
+        } else if (this.ctrl.buttonF.isDown) {
+          this.state = 'dodge';
         }
         var idleAnim = this.clazz.anim('idle');
         this.gameObj.anims.play(idleAnim, true);
         this.gameObj.setVelocityX(0);
+        this.timeEnteredState = 0;
+        this.animationDuration = 0;
         break;
       case 'run-left':
         if (!this.ctrl.cursorsKeys.left.isDown) {
@@ -96,8 +100,8 @@ export class Player {
         break;
       case 'charge':
         this.timeEnteredState += delta;
-        while (this.timeEnteredState > 25) {
-          this.timeEnteredState -= 25;
+        while (this.timeEnteredState > 10) {
+          this.timeEnteredState -= 10;
           this.power += 1 % 100;
         }
         this.bars.powerBar(this.power / 100);
@@ -121,7 +125,7 @@ export class Player {
         this.state = 'attack1-anim';
         break;
       case 'attack1-anim':
-        this.attackAnim(time);
+        this.awaitAnim(time);
         break;
       case 'attack2':
         var atk2Anim = this.clazz.anim('attack2');
@@ -131,7 +135,7 @@ export class Player {
         this.state = 'attack2-anim';
         break;
       case 'attack2-anim':
-        this.attackAnim(time);
+        this.awaitAnim(time);
         break;
       case 'attack3':
         var atk3Anim = this.clazz.anim('attack3');
@@ -141,7 +145,22 @@ export class Player {
         this.state = 'attack3-anim';
         break;
       case 'attack3-anim':
-        this.attackAnim(time);
+        this.awaitAnim(time);
+        break;
+      case 'dodge':
+        var rollAnim = this.clazz.anim('roll');
+        this.gameObj.anims.play(rollAnim, true);
+        this.timeEnteredState = time;
+        this.animationDuration = this.gameObj.anims.duration;
+        this.state = 'dodge-anim';
+        break;
+      case 'dodge-anim':
+        this.awaitAnim(time);
+        if (this.gameObj.flipX) {
+          this.gameObj.setVelocityX(-160);
+        } else {
+          this.gameObj.setVelocityX(160);
+        }
         break;
     }
   }
@@ -149,7 +168,7 @@ export class Player {
   /**
    * attack animation commitment
    */
-  attackAnim(time) {
+  awaitAnim(time) {
     if (time - this.timeEnteredState >= this.animationDuration) {
           this.timeEnteredState = 0;
           this.animationDuration = 0;
