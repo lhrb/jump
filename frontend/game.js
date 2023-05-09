@@ -171,9 +171,23 @@ class Example extends Phaser.Scene
         healthBar.fillStyle(0xe74c3c, 1);
         healthBar.fillRect(12,12,196,6);
 
+        const setHealth = (percent) => {
+            let width = Math.round(196 * percent);
+            healthBar.clear();
+            healthBar.fillStyle(0x15deed, 1);
+            healthBar.fillRect(12,34,width,6);
+        }
+
         const staminaBar = this.add.graphics();
         staminaBar.fillStyle(0x2ecc71, 1);
         staminaBar.fillRect(12,23,196,6);
+
+        const setStamina = (percent) => {
+            let width = Math.round(196 * percent);
+            staminaBar.clear();
+            staminaBar.fillStyle(0x15deed, 1);
+            staminaBar.fillRect(12,34,width,6);
+        }
 
         const powerBar = this.add.graphics();
         powerBar.fillStyle(0x15deed, 1);
@@ -186,8 +200,8 @@ class Example extends Phaser.Scene
             powerBar.fillRect(12,34,width,6);
         }
 
-        return { healthBar: healthBar,
-                 staminaBar: staminaBar,
+        return { healthBar: setHealth,
+                 staminaBar: setStamina,
                  powerBar: setPower };
     }
 }
