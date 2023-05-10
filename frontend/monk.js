@@ -90,11 +90,24 @@ export class Monk {
         });
         this.scene.anims.create({ key: 'rollMonk', frames: rollFrames, frameRate: 10, repeat: 0 });
 
+        let defendFramesStart  = this.scene.anims.generateFrameNames('monk', {
+            start: 1, end: 3, zeroPad:0,
+            prefix: 'defend/defend_', suffix: '.png'
+        });
+        this.scene.anims.create({ key: 'defendMonkStart', frames: defendFrames, frameRate: 10, repeat: 0 });
+
         let defendFrames  = this.scene.anims.generateFrameNames('monk', {
-            start: 1, end: 13, zeroPad:0,
+            start: 4, end: 9, zeroPad:0,
             prefix: 'defend/defend_', suffix: '.png'
         });
         this.scene.anims.create({ key: 'defendMonk', frames: defendFrames, frameRate: 10, repeat: 0 });
+
+        let defendFramesRelease  = this.scene.anims.generateFrameNames('monk', {
+            start: 9, end: 13, zeroPad:0,
+            prefix: 'defend/defend_', suffix: '.png'
+        });
+        this.scene.anims.create({ key: 'defendMonkRelease', frames: defendFrames, frameRate: 10, repeat: 0 });
+
 
         let takeHitFrames = this.scene.anims.generateFrameNames('monk', {
             start: 1, end: 6, zeroPad:0,
