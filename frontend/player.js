@@ -26,6 +26,12 @@ export class Player {
           this.state = 'charge';
         } else if (this.ctrl.buttonF.isDown) {
           this.state = 'dodge';
+        } else if (this.ctrl.buttonC.isDown) {
+          this.state = 'air-attack';
+        } else if (this.ctrl.buttonD.isDown) {
+          this.state = 'special-attack';
+        } else if (this.ctrl.buttonB.isDown) {
+          this.state = 'defend';
         }
         this.playAnim('idle');
         this.gameObj.setVelocityX(0);
@@ -160,8 +166,28 @@ export class Player {
         this.state = 'attack3-anim';
         break;
       case 'air-attack-anim':
+        this.awaitAnim(time);
         break;
-
+      case 'special-attack':
+        this.playAnim('specialAttack');
+        this.timeEnteredState = time;
+        this.animationDuration = this.gameObj.anims.duration;
+        this.state = 'special-attack-anim';
+        break;
+      case 'special-attack-anim':
+        this.awaitAnim(time);
+        break;
+      case 'defend':
+        this.playAnim('defend');
+        this.timeEnteredState = time;
+        this.state = 'defend-hold';
+        break;
+      case 'defend-hold':
+        this.playAnim('defend');
+        if (!this.ctrl.buttonB.isDown) {
+          this.state = 'idle';
+        }
+        break;
     }
   }
 
