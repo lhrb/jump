@@ -85,7 +85,7 @@ export class Monk {
         this.scene.anims.create({ key: 'meditateMonk', frames: meditateFrames, frameRate: 10, repeat: 0 });
 
         let rollFrames = this.scene.anims.generateFrameNames('monk', {
-            start: 1, end: 6, zeroPad:0,
+            start: 1, end: 4, zeroPad:0,
             prefix: 'roll/roll_', suffix: '.png'
         });
         this.scene.anims.create({ key: 'rollMonk', frames: rollFrames, frameRate: 10, repeat: 0 });
