@@ -27,9 +27,9 @@ export class Player {
         } else if (this.ctrl.buttonF.isDown) {
           this.state = 'dodge';
         }
-        var idleAnim = this.clazz.anim('idle');
-        this.gameObj.anims.play(idleAnim, true);
+        this.playAnim('idle');
         this.gameObj.setVelocityX(0);
+        // reset old state
         this.timeEnteredState = 0;
         this.animationDuration = 0;
         break;
@@ -39,10 +39,9 @@ export class Player {
         } else if (this.ctrl.buttonE.isDown) {
           this.state = 'jump';
         }
-        var runAnim = this.clazz.anim('run');
         this.gameObj.setFlipX(true);
         this.gameObj.setVelocityX(-160);
-        this.gameObj.anims.play(runAnim, true);
+        this.playAnim('run');
         break;
       case 'run-right':
         if (!this.ctrl.cursorsKeys.right.isDown) {
@@ -50,10 +49,9 @@ export class Player {
         } else if (this.ctrl.buttonE.isDown) {
           this.state = 'jump';
         }
-        var runAnim = this.clazz.anim('run');
         this.gameObj.setFlipX(false);
         this.gameObj.setVelocityX(160);
-        this.gameObj.anims.play(runAnim, true);
+        this.playAnim('run');
         break;
       case 'jump':
         this.gameObj.setVelocityY(-200);
@@ -77,8 +75,7 @@ export class Player {
         } else if (this.gameObj.body.onFloor()) {
           this.state = 'idle';
         }
-        var jumpAnim = this.clazz.anim('jumpDown');
-        this.gameObj.anims.play(jumpAnim, true);
+        this.playAnim('jumpDown');
         break;
       case 'double-jump':
         this.gameObj.setVelocityY(-200);
@@ -88,15 +85,13 @@ export class Player {
         if (this.gameObj.body.velocity.y >= 0) {
           this.state = 'double-jump-down-in-air';
         }
-        var jumpAnim = this.clazz.anim('jumpUp');
-        this.gameObj.anims.play(jumpAnim, true);
+        this.playAnim('jumpUp');
         break;
       case 'double-jump-down-in-air':
         if (this.gameObj.body.onFloor()) {
           this.state = 'idle';
         }
-        var jumpAnim = this.clazz.anim('jumpDown');
-        this.gameObj.anims.play(jumpAnim, true);
+        this.playAnim('jumpDown');
         break;
       case 'charge':
         this.timeEnteredState += delta;
@@ -118,8 +113,7 @@ export class Player {
         }
         break;
       case 'attack1':
-        var atk1Anim = this.clazz.anim('attack1');
-        this.gameObj.anims.play(atk1Anim, true);
+        this.playAnim('attack1');
         this.timeEnteredState = time;
         this.animationDuration = this.gameObj.anims.duration;
         this.state = 'attack1-anim';
@@ -128,8 +122,7 @@ export class Player {
         this.awaitAnim(time);
         break;
       case 'attack2':
-        var atk2Anim = this.clazz.anim('attack2');
-        this.gameObj.anims.play(atk2Anim, true);
+        this.playAnim('attack2');
         this.timeEnteredState = time;
         this.animationDuration = this.gameObj.anims.duration;
         this.state = 'attack2-anim';
@@ -138,8 +131,7 @@ export class Player {
         this.awaitAnim(time);
         break;
       case 'attack3':
-        var atk3Anim = this.clazz.anim('attack3');
-        this.gameObj.anims.play(atk3Anim, true);
+        this.playAnim('attack3');
         this.timeEnteredState = time;
         this.animationDuration = this.gameObj.anims.duration;
         this.state = 'attack3-anim';
@@ -148,8 +140,7 @@ export class Player {
         this.awaitAnim(time);
         break;
       case 'dodge':
-        var rollAnim = this.clazz.anim('roll');
-        this.gameObj.anims.play(rollAnim, true);
+        this.playAnim('roll');
         this.timeEnteredState = time;
         this.animationDuration = this.gameObj.anims.duration;
         this.state = 'dodge-anim';
@@ -162,6 +153,15 @@ export class Player {
           this.gameObj.setVelocityX(160);
         }
         break;
+      case 'air-attack':
+        this.playAnim('airAttack');
+        this.timeEnteredState = time;
+        this.animationDuration = this.gameObj.anims.duration;
+        this.state = 'attack3-anim';
+        break;
+      case 'air-attack-anim':
+        break;
+
     }
   }
 
@@ -178,6 +178,12 @@ export class Player {
 
   canDoubleJump(now, timeEntered) {
     return now - timeEntered >= 500;
+  }
+
+
+  playAnim(anim) {
+    var charAnim = this.clazz.anim(anim);
+    this.gameObj.anims.play(charAnim, true);
   }
 
 }
